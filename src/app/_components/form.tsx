@@ -36,7 +36,7 @@ export default function FormReg() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const resp: Response = await fetch(`https://webauthn-dinus.hapnanarsad.workers.dev/api/register/start?name=${data.username}`, {
+    const resp: Response = await fetch(`https://webauthn-dinus.hapnanarsad.workers.dev/api/registration/start?name=${data.username}`, {
         headers: {
             "Content-Type" : "application/json",
         },
