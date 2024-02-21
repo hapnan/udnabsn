@@ -63,7 +63,7 @@ export default function FormReg() {
       throw error;
     }
     
-    const verificationResp = await fetch('https://localhost/register/finish', {
+    const verificationResp = await fetch('https://api.seseorang.com/api/registration/finish', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default function FormReg() {
       }),
     });
     const verificationJSON = await verificationResp.json();
-    console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
+    console.log("Server Response", JSON.stringify(verificationJSON));
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (verificationJSON?.verified) {
