@@ -42,18 +42,10 @@ export default function FormReg() {
         },
     });
     let attResp;
-    if (!resp.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error("Failed to fetch data");
-    }
     try {
-      const opts = await resp.json();
-
-      console.log(JSON.stringify(opts));
-
-      attResp = await startRegistration(opts);
+      attResp = await startRegistration(await resp.json());
       console.log("Registration Response", JSON.stringify(attResp));
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         if(error.name == "InvalidStateError"){
             console.log(
