@@ -60,7 +60,7 @@ export default function FormReg() {
               "Error: Authenticator was probably already registered by user",
             );
         }else{
-            console.log(error.message)
+            console.log("error nih cui")
         }
       } 
       throw error;
