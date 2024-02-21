@@ -33,7 +33,7 @@ export default function FormReg() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const resp = await fetch("https://localhost/register/start", {
+    const resp = await fetch(`https://webauthn-dinus.hapnanarsad.workers.dev/api/register/start?name=${data.username}`, {
         headers: {
             "Content-Type" : "application/json",
         },
@@ -63,39 +63,39 @@ export default function FormReg() {
       } 
       throw error;
     }
-    const verificationResp = await fetch('https://localhost/register/finish', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(attResp),
-    });
-    const verificationJSON = await verificationResp.json();
-    console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
+    // const verificationResp = await fetch('https://localhost/register/finish', {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(attResp),
+    // });
+    // const verificationJSON = await verificationResp.json();
+    // console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (verificationJSON?.verified) {
-      toast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">Authenticator registered!</code>
-          </pre>
-        ),
-      });
-      console.log(`Authenticator registered!`);
-    } else {
-      toast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              ${JSON.stringify(verificationJSON)}
-            </code>
-          </pre>
-        ),
-      });
-    }
+    // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // if (verificationJSON?.verified) {
+    //   toast({
+    //     title: "You submitted the following values:",
+    //     description: (
+    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //         <code className="text-white">Authenticator registered!</code>
+    //       </pre>
+    //     ),
+    //   });
+    //   console.log(`Authenticator registered!`);
+    // } else {
+    //   toast({
+    //     title: "You submitted the following values:",
+    //     description: (
+    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //         <code className="text-white">
+    //           ${JSON.stringify(verificationJSON)}
+    //         </code>
+    //       </pre>
+    //     ),
+    //   });
+    // }
   }
   return (
     <Form {...form}>
