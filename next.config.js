@@ -9,6 +9,7 @@ const config = {
     experimental: {
         typedRoutes: true,
     },
+    distDir: 'build'
 };
 
 export default config;
