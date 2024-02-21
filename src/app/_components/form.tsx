@@ -42,15 +42,14 @@ export default function FormReg() {
             "Content-Type" : "application/json",
         },
     });
+    const result = await resp.json()
+    const {challenge} = result
+    
+    
     let attResp;
     try {
-      const data = await resp.json()
-      console.log(data.challenge)
-      attResp = await startRegistration(data);
-      console.log("Registration Response", JSON.stringify({
-        data : attResp,
-        challenge : data.challenge
-      }));
+      attResp = await startRegistration(result);
+      console.log("Registration Response", JSON.stringify(attResp));
     } catch (error) {
       if (error instanceof Error) {
         if(error.name == "InvalidStateError"){
@@ -64,42 +63,42 @@ export default function FormReg() {
       throw error;
     }
     
-    // const verificationResp = await fetch('https://localhost/register/finish', {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     data : attResp,
-    //     challenge : challenge
-    //   }),
-    // });
-    // const verificationJSON = await verificationResp.json();
-    // console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
+    const verificationResp = await fetch('https://localhost/register/finish', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        res: attResp,
+        challenge : challenge
+      }),
+    });
+    const verificationJSON = await verificationResp.json();
+    console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
 
-    // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    // if (verificationJSON?.verified) {
-    //   toast({
-    //     title: "You submitted the following values:",
-    //     description: (
-    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //         <code className="text-white">Authenticator registered!</code>
-    //       </pre>
-    //     ),
-    //   });
-    //   console.log(`Authenticator registered!`);
-    // } else {
-    //   toast({
-    //     title: "You submitted the following values:",
-    //     description: (
-    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //         <code className="text-white">
-    //           ${JSON.stringify(verificationJSON)}
-    //         </code>
-    //       </pre>
-    //     ),
-    //   });
-    // }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (verificationJSON?.verified) {
+      toast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">Authenticator registered!</code>
+          </pre>
+        ),
+      });
+      console.log(`Authenticator registered!`);
+    } else {
+      toast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              ${JSON.stringify(verificationJSON)}
+            </code>
+          </pre>
+        ),
+      });
+    }
   }
   return (
     <Form {...form}>
