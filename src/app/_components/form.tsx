@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 "use client";
 
 import { headers } from 'next/headers'
@@ -18,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startRegistration } from "@simplewebauthn/browser";
+
 const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -33,22 +36,21 @@ export default function FormReg() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const resp = await fetch(`https://webauthn-dinus.hapnanarsad.workers.dev/api/register/start?name=${data.username}`, {
+    const resp: Response = await fetch(`https://webauthn-dinus.hapnanarsad.workers.dev/api/register/start?name=${data.username}`, {
         headers: {
             "Content-Type" : "application/json",
         },
     });
+    let attResp;
     if (!resp.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error("Failed to fetch data");
     }
-    let attResp;
     try {
       const opts = await resp.json();
 
       console.log(JSON.stringify(opts, null, 2));
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       attResp = await startRegistration(opts);
       console.log("Registration Response", JSON.stringify(attResp, null, 2));
     } catch (error: unknown) {
