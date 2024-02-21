@@ -21,6 +21,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startRegistration } from "@simplewebauthn/browser";
 
+
 const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -36,13 +37,13 @@ export default function FormReg() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const resp: Response = await fetch(`https://webauthn-dinus.hapnanarsad.workers.dev/api/registration/start?name=${data.username}`, {
+    const resp: Response = await fetch(`https://api.seseorang.com/api/registration/start?name=${data.username}`, {
         headers: {
             "Content-Type" : "application/json",
         },
     });
     let attResp;
-    try {
+    try {[];
       attResp = await startRegistration(await resp.json());
       console.log("Registration Response", JSON.stringify(attResp));
     } catch (error) {
