@@ -3,7 +3,6 @@
 
 "use client";
 
-import { headers } from 'next/headers'
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -43,9 +42,14 @@ export default function FormReg() {
         },
     });
     let attResp;
-    try {[];
+    try {
+      const {challenge} = await resp.json()
+      console.log(challenge)
       attResp = await startRegistration(await resp.json());
-      console.log("Registration Response", JSON.stringify(attResp));
+      console.log("Registration Response", JSON.stringify({
+        data : attResp,
+        challenge : challenge
+      }));
     } catch (error) {
       if (error instanceof Error) {
         if(error.name == "InvalidStateError"){
@@ -58,12 +62,16 @@ export default function FormReg() {
       } 
       throw error;
     }
+    
     // const verificationResp = await fetch('https://localhost/register/finish', {
     //   method: "POST",
     //   headers: {
     //     "Content-Type": "application/json",
     //   },
-    //   body: JSON.stringify(attResp),
+    //   body: JSON.stringify({
+    //     data : attResp,
+    //     challenge : challenge
+    //   }),
     // });
     // const verificationJSON = await verificationResp.json();
     // console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
