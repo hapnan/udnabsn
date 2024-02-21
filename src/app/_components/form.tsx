@@ -49,10 +49,10 @@ export default function FormReg() {
     try {
       const opts = await resp.json();
 
-      console.log(JSON.stringify(opts, null, 2));
+      console.log(JSON.stringify(opts));
 
       attResp = await startRegistration(opts);
-      console.log("Registration Response", JSON.stringify(attResp, null, 2));
+      console.log("Registration Response", JSON.stringify(attResp));
     } catch (error: unknown) {
       if (error instanceof Error) {
         if(error.name == "InvalidStateError"){
