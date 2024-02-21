@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
@@ -43,12 +44,12 @@ export default function FormReg() {
     });
     let attResp;
     try {
-      const {challenge} = await resp.json()
-      console.log(challenge)
-      attResp = await startRegistration(await resp.json());
+      const data = await resp.json()
+      console.log(data.challenge)
+      attResp = await startRegistration(data);
       console.log("Registration Response", JSON.stringify({
         data : attResp,
-        challenge : challenge
+        challenge : data.challenge
       }));
     } catch (error) {
       if (error instanceof Error) {
