@@ -43,13 +43,12 @@ export default function FormReg() {
         },
     });
     const result = await resp.json()
-    const {challenge} = result
     
     
     let attResp;
     try {
       attResp = await startRegistration(result);
-      console.log("Registration Response", JSON.stringify(attResp));
+      console.log("Registration Response :", attResp);
     } catch (error) {
       if (error instanceof Error) {
         if(error.name == "InvalidStateError"){
@@ -63,13 +62,12 @@ export default function FormReg() {
       throw error;
     }
     
-    const verificationResp = await fetch('https://api.seseorang.com/api/registration/finish', {
+    const verificationResp = await fetch(`https://api.seseorang.com/api/registration/finish?name=${data.username}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username : data.username,
         attResp,
       }),
     });
