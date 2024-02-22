@@ -69,8 +69,8 @@ export default function FormReg() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        res: attResp,
-        challenge : challenge
+        username : data.username,
+        attResp,
       }),
     });
     let verificationJSON;
