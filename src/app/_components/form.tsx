@@ -50,7 +50,7 @@ export default function FormReg() {
     let attResp: RegistrationResponseJSON;
     try {
       attResp = await startRegistration(result);
-      console.log("Registration Response :", attResp);
+      console.log("Registration Response :", JSON.stringify(attResp));
     } catch (error) {
       if (error instanceof Error) {
         if(error.name == "InvalidStateError"){
