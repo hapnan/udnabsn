@@ -20,7 +20,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startRegistration } from "@simplewebauthn/browser";
-
+import type {
+  RegistrationResponseJSON,
+} from "@simplewebauthn/types";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -45,7 +47,7 @@ export default function FormReg() {
     const result = await resp.json()
     
     
-    let attResp;
+    let attResp: RegistrationResponseJSON;
     try {
       attResp = await startRegistration(result);
       console.log("Registration Response :", attResp);
