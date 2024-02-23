@@ -69,9 +69,7 @@ export default function FormReg() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        attResp,
-      }),
+      body: JSON.stringify(attResp),
     });
     let verificationJSON;
     try {
@@ -83,9 +81,9 @@ export default function FormReg() {
             console.log(
               "Error: "+error.message,
             );
+            throw error;
         }
       } 
-      throw error;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
