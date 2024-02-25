@@ -21,7 +21,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WebAuthnError, startRegistration } from "@simplewebauthn/browser";
 import type { RegistrationResponseJSON } from "@simplewebauthn/types";
-import { createClient } from "@libsql/client";
+import { createClient } from "@libsql/client/web";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
