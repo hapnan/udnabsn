@@ -30,11 +30,11 @@ const FormSchema = z.object({
 });
 
 function connectDB(): LibsqlClient{
-  const url = process.env.NEXT_TURSO_DB_URL?.trim();
+  const url = process.env.NEXT_PUBLIC_DB_URL?.trim();
   if (url === undefined) {
-     throw console.error("LIBSQL_DB_URL env var is not defined");
+    throw console.error("LIBSQL_DB_URL env var is not defined");
   }
-  const authToken = process.env.NEXT_TURSO_DB_AUTH_TOKENN?.trim();
+  const authToken = process.env.NEXT_PUBLIC_DB_AUTH_TOKENN?.trim();
   if (authToken === undefined) {
     throw console.error("LIBSQL_DB_URL env var is not defined");
   }
