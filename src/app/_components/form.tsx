@@ -21,7 +21,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WebAuthnError, startRegistration } from "@simplewebauthn/browser";
 import type { RegistrationResponseJSON } from "@simplewebauthn/types";
-import { createClient } from "@libsql/client/node";
+import { type Client as LibsqlClient, createClient } from "@libsql/client/web";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -29,10 +29,18 @@ const FormSchema = z.object({
   }),
 });
 
-const client = createClient({
-  url: process.env.NEXT_TURSO_DB_URL!,
-  authToken: process.env.NEXT_TURSO_DB_AUTH_TOKEN!,
-});
+function connectDB(): LibsqlClient{
+  const url = process.env.NEXT_TURSO_DB_URL?.trim();
+  if (url === undefined) {
+    throw console.error(400, "LIBSQL_DB_URL env var is not defined");
+  }
+  const authToken = process.env.NEXT_TURSO_DB_AUTH_TOKENN?.trim();
+  if (authToken === undefined) {
+    throw console.error(400, "LIBSQL_DB_URL env var is not defined");
+  }
+
+  return createClient({ url, authToken });
+}
 
 export default function FormReg() {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -41,7 +49,8 @@ export default function FormReg() {
       username: "",
     },
   });
-
+  
+  const client = connectDB();
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const resp: Response = await fetch(
       `https://api.seseorang.com/api/registration/start?name=${data.username}`,
