@@ -36,7 +36,7 @@ function connectDB(): LibsqlClient{
   }
   const authToken = process.env.NEXT_TURSO_DB_AUTH_TOKENN?.trim();
   if (authToken === undefined) {
-    console.error("LIBSQL_DB_URL env var is not defined");
+    throw console.error("LIBSQL_DB_URL env var is not defined");
   }
 
   return createClient({ url, authToken });
