@@ -30,8 +30,8 @@ const FormSchema = z.object({
 });
 
 const client = createClient({
-  url: process.env.NUXT_TURSO_DB_URL!,
-  authToken: process.env.NUXT_TURSO_DB_AUTH_TOKEN!,
+  url: process.env.NEXT_TURSO_DB_URL!,
+  authToken: process.env.NEXT_TURSO_DB_AUTH_TOKEN!,
 });
 
 export default function FormReg() {
