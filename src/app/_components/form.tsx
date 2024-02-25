@@ -19,15 +19,19 @@ import { toast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startRegistration } from "@simplewebauthn/browser";
-import type {
-  RegistrationResponseJSON,
-} from "@simplewebauthn/types";
+import { WebAuthnError, startRegistration } from "@simplewebauthn/browser";
+import type { RegistrationResponseJSON } from "@simplewebauthn/types";
+import { createClient } from "@libsql/client";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+});
+
+const client = createClient({
+  url: process.env.NUXT_TURSO_DB_URL!,
+  authToken: process.env.NUXT_TURSO_DB_AUTH_TOKEN!,
 });
 
 export default function FormReg() {
@@ -39,55 +43,67 @@ export default function FormReg() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const resp: Response = await fetch(`https://api.seseorang.com/api/registration/start?name=${data.username}`, {
+    const resp: Response = await fetch(
+      `https://api.seseorang.com/api/registration/start?name=${data.username}`,
+      {
         headers: {
-            "Content-Type" : "application/json",
+          "Content-Type": "application/json",
         },
+      },
+    );
+    const result = await resp.json();
+    const userid = result.user.id as string;
+
+    const trans = await client.transaction("write");
+    await trans.execute({
+      sql: "INSERT INTO users (id, username) VALUE (?1, ?2)",
+      args: [userid, data.username],
     });
-    const result = await resp.json()
-    
-    
+
     let attResp: RegistrationResponseJSON;
     try {
       attResp = await startRegistration(result);
       console.log("Registration Response :", JSON.stringify(attResp));
     } catch (error) {
       if (error instanceof Error) {
-        if(error.name == "InvalidStateError"){
-            console.log(
-              "Error: Authenticator was probably already registered by user",
-            );
-        }else{
-            console.log("error nih cui")
+        if (error.name == "InvalidStateError") {
+          console.log(
+            "Error: Authenticator was probably already registered by user",
+          );
+        } else {
+          console.log("error nih cui");
         }
-      } 
+      }
       throw error;
     }
-    
-    const verificationResp = await fetch(`https://api.seseorang.com/api/registration/finish?name=${data.username}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+
+    const verificationResp = await fetch(
+      `https://api.seseorang.com/api/registration/finish?name=${data.username}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(attResp),
       },
-      body: JSON.stringify(attResp),
-    });
+    );
     let verificationJSON;
     try {
       verificationJSON = await verificationResp.json();
       console.log("Server Response", JSON.stringify(verificationJSON, null, 2));
     } catch (error) {
-      if (error instanceof Error) {
-        if(error){
-            console.log(
-              "Error: "+error.message,
-            );
-            throw error;
+      if (error instanceof WebAuthnError) {
+        if (error) {
+          trans.close();
+          console.log("Error: " + error.message);
+          throw error.message;
         }
-      } 
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (verificationJSON?.verified) {
+      await trans.commit();
       toast({
         title: "You submitted the following values:",
         description: (
@@ -98,6 +114,7 @@ export default function FormReg() {
       });
       console.log(`Authenticator registered!`);
     } else {
+      await trans.rollback();
       toast({
         title: "You submitted the following values:",
         description: (
