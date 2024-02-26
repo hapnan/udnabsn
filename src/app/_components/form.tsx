@@ -80,11 +80,7 @@ export default function FormReg() {
       throw error;
     }
 
-    const trans = await client.transaction("write");
-    await trans.execute({
-      sql: "INSERT INTO users (id, username) VALUES (?1, ?2)",
-      args: [userid, data.username],
-    });
+    
 
     const verificationResp = await fetch(
       `https://api.seseorang.com/api/registration/finish?name=${data.username}`,
@@ -103,13 +99,17 @@ export default function FormReg() {
     } catch (error) {
       if (error instanceof WebAuthnError) {
         if (error) {
-          trans.close();
+          
           console.log("Error: " + error.message);
           throw error.message;
         }
       }
     }
-
+    const trans = await client.transaction("write");
+    await trans.execute({
+      sql: "INSERT INTO users (id, username) VALUES (?1, ?2)",
+      args: [userid, data.username],
+    });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (verificationJSON?.verified) {
       await trans.commit();
