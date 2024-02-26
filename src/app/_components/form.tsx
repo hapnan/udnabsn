@@ -30,11 +30,11 @@ const FormSchema = z.object({
 });
 
 function connectDB(): LibsqlClient{
-  const url = (process.env.NEXT_PUBLIC_DB_URL!).trim();
+  const url = process.env.NEXT_PUBLIC_DB_URL!;
   if (url === undefined) {
      console.error("LIBSQL_DB_URL env var is not defined");
   }
-  const authToken = (process.env.NEXT_PUBLIC_DB_AUTH_TOKENN!).trim();
+  const authToken = process.env.NEXT_PUBLIC_DB_AUTH_TOKENN!;
   if (authToken === undefined) {
      console.error("LIBSQL_Auth env var is not defined");
   }
