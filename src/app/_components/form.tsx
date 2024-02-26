@@ -21,7 +21,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WebAuthnError, startRegistration } from "@simplewebauthn/browser";
 import type { RegistrationResponseJSON } from "@simplewebauthn/types";
-import { type Client as LibsqlClient, createClient } from "@libsql/client/web";
+import  {type  Client as LibsqlClient, createClient } from "@libsql/client/web";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -65,7 +65,7 @@ export default function FormReg() {
 
     const trans = await client.transaction("write");
     await trans.execute({
-      sql: "INSERT INTO users (id, username) VALUE (?1, ?2)",
+      sql: "INSERT INTO users (id, username) VALUES (?1, ?2)",
       args: [userid, data.username],
     });
 
@@ -76,10 +76,12 @@ export default function FormReg() {
     } catch (error) {
       if (error instanceof Error) {
         if (error.name == "InvalidStateError") {
+          trans.close()
           console.log(
             "Error: Authenticator was probably already registered by user",
           );
         } else {
+          trans.close()
           console.log("error nih cui");
         }
       }
