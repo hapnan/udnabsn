@@ -62,13 +62,7 @@ export default function FormReg() {
     );
     const result = await resp.json();
     const userid = result.user.id as string;
-
-    const trans = await client.transaction("write");
-    await trans.execute({
-      sql: "INSERT INTO users (id, username) VALUES (?1, ?2)",
-      args: [userid, data.username],
-    });
-
+    
     let attResp: RegistrationResponseJSON;
     try {
       attResp = await startRegistration(result);
@@ -76,17 +70,21 @@ export default function FormReg() {
     } catch (error) {
       if (error instanceof Error) {
         if (error.name == "InvalidStateError") {
-          trans.close()
           console.log(
             "Error: Authenticator was probably already registered by user",
           );
         } else {
-          trans.close()
           console.log("error nih cui");
         }
       }
       throw error;
     }
+
+    const trans = await client.transaction("write");
+    await trans.execute({
+      sql: "INSERT INTO users (id, username) VALUES (?1, ?2)",
+      args: [userid, data.username],
+    });
 
     const verificationResp = await fetch(
       `https://api.seseorang.com/api/registration/finish?name=${data.username}`,
