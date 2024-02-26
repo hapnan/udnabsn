@@ -34,7 +34,7 @@ function connectDB(): LibsqlClient{
   if (url === undefined) {
      console.error("LIBSQL_DB_URL env var is not defined");
   }
-  const authToken = process.env.NEXT_PUBLIC_DB_AUTH_TOKENN!;
+  const authToken = process.env.NEXT_PUBLIC_DB_AUTH_TOKEN!;
   if (authToken === undefined) {
      console.error("LIBSQL_Auth env var is not defined");
   }
