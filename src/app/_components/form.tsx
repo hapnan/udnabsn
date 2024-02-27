@@ -21,7 +21,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WebAuthnError, startRegistration } from "@simplewebauthn/browser";
 import type { RegistrationResponseJSON } from "@simplewebauthn/types";
-import  {type  Client as LibsqlClient, createClient } from "@libsql/client/web";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -29,18 +28,6 @@ const FormSchema = z.object({
   }),
 });
 
-function connectDB(): LibsqlClient{
-  const url = process.env.NEXT_PUBLIC_DB_URL!;
-  if (url === undefined) {
-     console.error("LIBSQL_DB_URL env var is not defined");
-  }
-  const authToken = process.env.NEXT_PUBLIC_DB_AUTH_TOKEN!;
-  if (authToken === undefined) {
-     console.error("LIBSQL_Auth env var is not defined");
-  }
-
-  return createClient({ url, authToken });
-}
 
 export default function FormReg() {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -50,7 +37,6 @@ export default function FormReg() {
     },
   });
   
-  const client = connectDB();
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const resp: Response = await fetch(
       `https://api.seseorang.com/api/registration/start?name=${data.username}`,
@@ -61,7 +47,6 @@ export default function FormReg() {
       },
     );
     const result = await resp.json();
-    const userid = result.user.id as string;
     
     let attResp: RegistrationResponseJSON;
     try {
@@ -105,14 +90,9 @@ export default function FormReg() {
         }
       }
     }
-    const trans = await client.transaction("write");
-    await trans.execute({
-      sql: "INSERT INTO users (id, username) VALUES (?1, ?2)",
-      args: [userid, data.username],
-    });
+    
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (verificationJSON?.verified) {
-      await trans.commit();
       toast({
         title: "You submitted the following values:",
         description: (
@@ -123,7 +103,6 @@ export default function FormReg() {
       });
       console.log(`Authenticator registered!`);
     } else {
-      await trans.rollback();
       toast({
         title: "You submitted the following values:",
         description: (
