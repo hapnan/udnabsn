@@ -1,11 +1,10 @@
-import FormReg from './_components/form'
+//import FormReg from '@/components/form'
+import Login from "@/components/login";
 export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <FormReg/>
-      </div>
+    <main className="dark:bg-zinc-950e mx-auto flex min-h-screen flex-col items-center justify-center md:container dark:text-white">
+      {/* <FormReg/> */}
+      <Login />
     </main>
   );
 }
-
