@@ -126,7 +126,9 @@ export async function POST(request: Request) {
     currentOptions as unknown as PublicKeyCredentialCreationOptionsJSON;
 
   if (!passkeys) {
-    return new Error(`Could not find passkey ${body.id} for user ${name}`);
+    return Response.json(`Could not find passkey ${body.id} for user ${name}`, {
+      status: 404,
+    });
   }
 
   let verification;
