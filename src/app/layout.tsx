@@ -30,8 +30,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TRPCReactProvider>
-            <SpeedInsights />
             {children}
+            <SpeedInsights />
             <Toaster />
           </TRPCReactProvider>
         </ThemeProvider>
