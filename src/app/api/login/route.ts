@@ -1,4 +1,3 @@
-"use server";
 import { getPasskeys, getUserswithnim } from "@/action/action";
 import {
   generateAuthenticationOptions,
