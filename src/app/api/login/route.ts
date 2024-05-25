@@ -8,13 +8,12 @@ import type {
   AuthenticatorTransportFuture,
   CredentialDeviceType,
   Base64URLString,
-} from "@simplewebauthn/types";
-import { kv } from "@vercel/kv";
-import type {
   AuthenticationResponseJSON,
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,
-} from "node_modules/@simplewebauthn/server/esm/deps";
+} from "@simplewebauthn/types";
+import { kv } from "@vercel/kv";
+
 type UserModel = {
   id: number;
   nim: string;

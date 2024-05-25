@@ -9,8 +9,8 @@ import type {
   CredentialDeviceType,
   Base64URLString,
   RegistrationResponseJSON,
+  PublicKeyCredentialCreationOptionsJSON,
 } from "@simplewebauthn/types";
-import type { PublicKeyCredentialCreationOptionsJSON } from "node_modules/@simplewebauthn/server/esm/deps";
 import { kv } from "@vercel/kv";
 import { getPasskeys, getUserswithnim } from "@/action/action";
 
