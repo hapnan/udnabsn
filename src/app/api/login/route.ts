@@ -63,7 +63,7 @@ const rpID = "localhost";
  * 'http://localhost' and 'http://localhost:PORT' are also valid.
  * Do NOT include any trailing /
  */
-const origin = `https://${rpID}`;
+const origin = `https://${rpID}:3000`;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
