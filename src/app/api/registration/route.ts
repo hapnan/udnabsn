@@ -60,7 +60,7 @@ const rpName = "Absensi Dinus";
  * A unique identifier for your website. 'localhost' is okay for
  * local dev
  */
-const rpID = "localhost";
+const rpID = "www.seseorang.com";
 /**
  * The URL at which registrations and authentications should occur.
  * 'http://localhost' and 'http://localhost:PORT' are also valid.

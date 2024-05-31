@@ -52,7 +52,7 @@ export default function FormRegister({ data }: { data: user[] }) {
 
   async function register(data: z.infer<typeof FormSchema>) {
     const resp = await fetch(
-      `https://localhost:3000/api/registration?nim=${data.nim}`,
+      `https://www.seseorang.com/api/registration?nim=${data.nim}`,
       {
         method: "GET",
         headers: {
@@ -80,7 +80,7 @@ export default function FormRegister({ data }: { data: user[] }) {
     }
 
     const verificationResp = await fetch(
-      `https://localhost:3000/api/registration?nim=${data.nim}`,
+      `https://www.seseorang.com/api/registration?nim=${data.nim}`,
       {
         method: "POST",
         headers: {
